@@ -1,19 +1,48 @@
-import { Heading } from './components/Heading';
-
 import './styles/theme.css';
 import './styles/global.css';
-import { TimerIcon } from 'lucide-react';
+
+import { Container } from './components/Container';
+//import { Heading } from './components/Heading';
+import { Logo } from './components/Logo';
+import { Menu } from './components/Menu';
+import { CountDown } from './components/CountDown';
+import { DefaultInput } from './components/DefaultInput';
 
 export function App() {
     return (
         <>
-            <Heading>
-                Hello, World!
-                <button>
-                    <TimerIcon />
-                </button>    
-            </Heading>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui ratione ut eos, facilis sed maiores recusandae nesciunt dolore. Ipsam ex hic iure adipisci facilis dolorem odit nam esse doloribus facere!</p>
+            <Container>
+                <Logo />
+            </Container>
+
+            <Container>
+                <Menu />
+            </Container>
+
+            <Container>
+                <CountDown />
+            </Container>
+
+            <Container>
+                <form action="" className="form">
+                    <div className="formRow">
+                        <DefaultInput labelText="task:" id="meuInput" type="text"/>
+                    </div>
+
+                    <div className="formRow">
+                        <p>Lorem ipsum dolor sit amet.</p>
+                    </div>
+
+                    <div className="formRow">
+                        <p>ciclos</p>
+                        <p>0 0 0 0 0 0 0 0</p>
+                    </div>
+
+                    <div className="formRow">
+                        <button>Enviar</button>
+                    </div>
+                </form>
+            </Container>
         </>
-    )
+    );
 }
