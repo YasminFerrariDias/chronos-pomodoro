@@ -9,31 +9,47 @@ type TaskContextProviderProps = {
 export function TaskContextProvider({ children }: TaskContextProviderProps) {
   const [state, setState] = useState(initialTaskState);
 
-  const [numero, dispatch] = useReducer((state, action) => {
+  type ActionType = {
+    type: string;
+    payload?: number;
+  }
+
+  const [myState, dispatch] = useReducer((state, action) => {
     console.log(state, action);
 
-    switch (action) {
-      case 'INCREMENT':
-        return state + 1;
-      case 'DECREMENT':
-        return state - 1;
-      case 'ZERAR':
-        return 0;
+    switch (action.type) {
+      case 'INCREMENT':{
+        if(!action.payload) return state;
+        return {
+          ...state,
+          secondsReamining: state.secondsReamining + action.payload,
+        }
+      }
+      case 'DECREMENT':{
+        if(!action.payload) return state;
+        return {
+          ...state,
+          secondsReamining: state.secondsReamining - action.payload,
+        }
+      }
+      case 'ZERAR':{
+        return {
+          secondsReamining: 0
+        }
+      }
     }
 
     return state;
-  }, 0);
-
-  //useEffect(()=>{
-  //  console.log(state);
-  // }, [state]);
+  }, {
+    secondsReamining: 0,
+  });
   
   return (
     <TaskContext.Provider value={{ state, setState }}>
-      <h1>O número é {numero}</h1>
-      <button onClick={() => dispatch('INCREMENT')}>incremente</button>
-      <button onClick={() => dispatch('DECREMENT')}>decremente</button>
-      <button onClick={() => dispatch('ZERAR')}>zerar</button>
+      <h1>O número é {JSON.stringify(myState)}</h1>
+      <button onClick={() => dispatch({ type: 'INCREMENT', payload: 10})}>incremente + 10</button>
+      <button onClick={() => dispatch({ type: 'DECREMENT', payload: 20})}>DECREMENT - 20</button>
+      <button onClick={() => dispatch({ type: 'ZERAR', payload: 20})}>ZERAR</button>
     </TaskContext.Provider>
   );
 }
