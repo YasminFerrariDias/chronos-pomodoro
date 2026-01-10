@@ -44,7 +44,7 @@ export function MainForm() {
     setState(prevState => {
       return {
         ...prevState,
-        conofig: {...prevState.config},
+        config: {...prevState.config},
         activeTask: newTask,
         currentCycle: nextCycle,
         secondsRemaining, //conferir
@@ -61,6 +61,12 @@ export function MainForm() {
         activeTask: null,
         secondsRemaining: 0, //conferir
         formattedSecondsRemaining: '00:00',
+        tasks: prevState.tasks.map(task => {
+          if (prevState.activeTask && prevState.activeTask.id === task.id) {
+            return { ...task, interruptDate: Date.now() };
+          }
+          return task;
+        })
       };
     });
   }
@@ -88,8 +94,11 @@ export function MainForm() {
             title="Iniciar nova tarefa" 
             type='submit' 
             icon={<PlayCircleIcon />} 
-            color='green' />
+            color='green' 
+            key='button_submit'  
+          />
         )}
+
         {!!state.activeTask && (
           <DefaultButton 
             aria-label="Interromper tarefa atual" 
@@ -97,8 +106,10 @@ export function MainForm() {
             type='button' 
             icon={<StopCircleIcon />} 
             color='red' 
-            onClick={handleInterruptTask} />
-          )}
+            onClick={handleInterruptTask}
+            key='button_interrupt'
+          />
+        )}
       </div>
     </form>
   )
