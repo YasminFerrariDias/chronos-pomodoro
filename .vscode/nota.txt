@@ -1,0 +1,6 @@
+useReducer <- hook do Raect que recebe um reducer e um estado inicial
+reducer <- função que recebe o estado atual e uma ação, e retorna um novo estado
+state <- estado atual
+action <- a ação disparada, geralmente um objeto com type e (opcionalmente) payload
+type <- tipo da ação, geralmente uma string (pode ser enum, constante, etc)
+payload <- dados extras enviado junto com a ação, se necessário para atualizar o estado  
