@@ -10,14 +10,13 @@ export type TaskActionsWithPayoload =
 | {
   type: typeof TaskActionTypes.START_TASK,
   payload: TaskModel;
-} | {
-  type: typeof TaskActionTypes.INTERRUPT_TASK,
-  payload: TaskModel;
 };
 
 export type TaskActionsWithoutPayoload = | {
   type: typeof TaskActionTypes.RESET_STATE;
-} 
+} | {
+  type: typeof TaskActionTypes.INTERRUPT_TASK;
+};
 
 export type TaskActionModel = 
   | TaskActionsWithPayoload
