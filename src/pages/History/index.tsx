@@ -6,6 +6,7 @@ import { DefaultButton } from "../../components/DefaultButton";
 
 import styles from "./styles.module.css";
 import { useTaskContext } from "../../contexts/TaskContext/useTaskContext";
+import { formatDate } from "../../utils/formatDate";
 
 export function History() {
   const {state} = useTaskContext();
@@ -46,7 +47,7 @@ export function History() {
                   <tr key={task.id}>
                     <td>{task.name}</td>
                     <td>{task.duration} min</td>
-                    <td>{new Date(task.startDate).toISOString()}</td>
+                    <td>{formatDate(task.startDate)}</td>
                     <td>{task.interruptDate}</td>
                     <td>{task.type}</td>
                   </tr>
