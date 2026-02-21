@@ -8,11 +8,33 @@ import styles from "./styles.module.css";
 import { useTaskContext } from "../../contexts/TaskContext/useTaskContext";
 import { formatDate } from "../../utils/formatDate";
 import { getTaskStatus } from "../../utils/getTaskStatus";
-import { sortTasks } from "../../utils/sortTasks";
+import { sortTasks, type SortTasksOptions } from "../../utils/sortTasks";
+import { useState } from "react";
 
 export function History() {
   const {state} = useTaskContext();
-  const sortedTask = sortTasks({ tasks: state.tasks });
+  const [ sortTaskOptions, setSortTaskOptions ] = useState<SortTasksOptions>(
+    () => {
+      return {
+        tasks: sortTasks({ tasks: state.tasks }),
+        direction: 'desc',
+        field: 'startDate', 
+      }
+  });
+
+  function handleSortTasks({field}: Pick<SortTasksOptions, 'field'>) {
+    const newDirection = sortTaskOptions.direction === 'desc' ? 'asc' : 'desc'
+    
+    setSortTaskOptions({
+      tasks: sortTasks({
+        direction: newDirection,
+        tasks: sortTaskOptions.tasks,
+        field,
+      }),
+      direction: newDirection,
+      field,
+    });
+  }
 
   return (
     <MainTemplate>
@@ -35,16 +57,16 @@ export function History() {
           <table>
             <thead>
               <tr>
-                <th>Tarefa</th>
-                <th>Duração</th>
-                <th>Data</th>
-                <th>Status</th>
-                <th>Tipo</th>
+                <th onClick={() => handleSortTasks({ field: 'name' })} className={styles.thSort}>Tarefa ↕</th>
+                <th onClick={() => handleSortTasks({ field: 'duration' })} className={styles.thSort}>Duração ↕</th>
+                <th onClick={() => handleSortTasks({ field: 'startDate' })} className={styles.thSort}>Data ↕</th>
+                <th className={styles.thSort}>Status ↕</th>
+                <th className={styles.thSort}>Tipo ↕</th>
               </tr>
             </thead>
 
             <tbody>
-              {sortedTask.map(task => {
+              {sortTaskOptions.tasks.map(task => {
                 const taskTypeDictionary = {
                   workTime: 'Foco',
                   shortBreakTime: 'Descanso curto',
