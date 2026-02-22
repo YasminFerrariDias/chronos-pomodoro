@@ -10,10 +10,12 @@ import { formatDate } from "../../utils/formatDate";
 import { getTaskStatus } from "../../utils/getTaskStatus";
 import { sortTasks, type SortTasksOptions } from "../../utils/sortTasks";
 import { useEffect, useState } from "react";
+import { showMessage } from "../../adapters/showMessage";
 import { TaskActionTypes } from "../../contexts/TaskContext/taskActions";
 
 export function History() {
   const { state, dispatch } = useTaskContext();
+  const [confirmClearHistory, setConfirmClearHistory] = useState(false);
   const hasTasks = state.tasks.length > 0;
 
   const [sortTaskOptions, setSortTaskOptions] = useState<SortTasksOptions>(
@@ -25,6 +27,27 @@ export function History() {
       };
     },
   );
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSortTaskOptions((prevState) => ({
+      ...prevState,
+      tasks: sortTasks({
+        tasks: state.tasks,
+        direction: prevState.direction,
+        field: prevState.field,
+      }),
+    }));
+  }, [state.tasks]);
+
+  useEffect(() => {
+    if (!confirmClearHistory) return;
+
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setConfirmClearHistory(false);
+
+    dispatch({ type: TaskActionTypes.RESET_STATE});
+  }, [confirmClearHistory, dispatch]);
 
   function handleSortTasks({ field }: Pick<SortTasksOptions, "field">) {
     const newDirection = sortTaskOptions.direction === "desc" ? "asc" : "desc";
@@ -40,22 +63,11 @@ export function History() {
     });
   }
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setSortTaskOptions((prevState) => ({
-      ...prevState,
-      tasks: sortTasks({
-        tasks: state.tasks,
-        direction: prevState.direction,
-        field: prevState.field,
-      }),
-    }));
-  }, [state.tasks]);
-
   function handleResetHistory() {
-    if (!confirm("Tem certeza que deseja deletar o histórico?")) return;
-
-    dispatch({ type: TaskActionTypes.RESET_STATE });
+    showMessage.dissmiss();
+    showMessage.confirm("Tem certeza?", (confirmation) => {
+      setConfirmClearHistory(confirmation);
+    });
   }
 
   return (
