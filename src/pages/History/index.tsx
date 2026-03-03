@@ -49,6 +49,13 @@ export function History() {
     dispatch({ type: TaskActionTypes.RESET_STATE});
   }, [confirmClearHistory, dispatch]);
 
+  useEffect(() => {
+    return () => {
+      // sempre que entrar na página ele vai renderizar toda a tela
+      showMessage.dissmiss();
+    }
+  }, [])
+
   function handleSortTasks({ field }: Pick<SortTasksOptions, "field">) {
     const newDirection = sortTaskOptions.direction === "desc" ? "asc" : "desc";
 
@@ -67,6 +74,11 @@ export function History() {
     showMessage.dissmiss();
     showMessage.confirm("Tem certeza?", (confirmation) => {
       setConfirmClearHistory(confirmation);
+
+      /* Uma das formas de arrumar o bug é fazendo assim, onde quando clicar ok na mensagem de confirmar, ele apaga mesmo estando em outra página
+      if (confirmation) {
+        dispatch({ type: TaskActionTypes.RESET_STATE });
+      }*/
     });
   }
 
