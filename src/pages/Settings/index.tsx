@@ -8,6 +8,7 @@ import { MainTemplate } from "../../templates/MainTemplate";
 import { useRef } from "react";
 import { useTaskContext } from "../../contexts/TaskContext/useTaskContext";
 import { showMessage } from "../../adapters/showMessage";
+import { TaskActionTypes } from "../../contexts/TaskContext/taskActions";
 
 export type HomeProps = {
   state: TaskStateModel;
@@ -15,7 +16,7 @@ export type HomeProps = {
 };
 
 export function Settings() {
-  const { state } = useTaskContext();
+  const { state, dispatch } = useTaskContext();
   const workTimeInput = useRef<HTMLInputElement>(null);
   const shortBreakTimeInput = useRef<HTMLInputElement>(null);
   const longBreakTimeInput = useRef<HTMLInputElement>(null);
@@ -51,11 +52,15 @@ export function Settings() {
     }
 
     if (shortBreakTime < 1 || shortBreakTime > 30) {
-      formErrors.push("O tempo de descanso curto deve ser entre 1 e 30 minutos.");
+      formErrors.push(
+        "O tempo de descanso curto deve ser entre 1 e 30 minutos.",
+      );
     }
 
     if (longBreakTime < 1 || longBreakTime > 60) {
-      formErrors.push("O tempo de descanso longo deve ser entre 1 e 60 minutos.");
+      formErrors.push(
+        "O tempo de descanso longo deve ser entre 1 e 60 minutos.",
+      );
     }
 
     if (formErrors.length > 0) {
@@ -64,7 +69,16 @@ export function Settings() {
       });
       return;
     }
-    alert("Configurações salvas com sucesso!");
+
+    dispatch({
+      type: TaskActionTypes.CHANGE_SETTINGS,
+      payload: {
+        workTime,
+        shortBreakTime,
+        longBreakTime,
+      },
+    });
+    showMessage.success("Configurações salvas com sucesso!");
   }
 
   return (
