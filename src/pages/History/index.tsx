@@ -41,20 +41,24 @@ export function History() {
   }, [state.tasks]);
 
   useEffect(() => {
+    document.title = "Histórico | Chronos Pomodoro";
+  }, []);
+
+  useEffect(() => {
     if (!confirmClearHistory) return;
 
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setConfirmClearHistory(false);
 
-    dispatch({ type: TaskActionTypes.RESET_STATE});
+    dispatch({ type: TaskActionTypes.RESET_STATE });
   }, [confirmClearHistory, dispatch]);
 
   useEffect(() => {
     return () => {
       // sempre que entrar na página ele vai renderizar toda a tela
       showMessage.dissmiss();
-    }
-  }, [])
+    };
+  }, []);
 
   function handleSortTasks({ field }: Pick<SortTasksOptions, "field">) {
     const newDirection = sortTaskOptions.direction === "desc" ? "asc" : "desc";
